@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kishore Gowda V - Messages Admin Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .admin-wrapper {
+      max-width: 1000px;
+      margin: 3rem auto;
+      padding: 0 1.5rem;
+    }
+    .admin-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border-subtle);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .admin-title-area h1 {
+      font-size: 1.8rem;
+      margin-bottom: 0.25rem;
+    }
+    .admin-title-area p {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+    }
+    .admin-stats-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+    .admin-stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .admin-stat-val {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--accent-primary);
+    }
+    .admin-stat-lbl {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .auth-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      padding: 2.5rem;
+      max-width: 480px;
+      margin: 4rem auto;
+      text-align: center;
+      box-shadow: var(--shadow-lg);
+    }
+    .messages-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    .msg-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      transition: all var(--transition-fast);
+      position: relative;
+    }
+    .msg-card.unread {
+      border-left: 4px solid var(--accent-primary);
+      background: var(--bg-secondary);
+    }
+    .msg-card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 0.8rem;
+      flex-wrap: wrap;
+    }
+    .msg-sender-name {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .msg-sender-email {
+      font-size: 0.9rem;
+      color: var(--accent-primary);
+      font-family: var(--font-mono);
+    }
+    .msg-date {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .msg-subject {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+    }
+    .msg-body {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      white-space: pre-wrap;
+      background: var(--bg-primary);
+      padding: 1rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+      margin-bottom: 1rem;
+    }
+    .msg-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .btn-danger {
+      background: var(--danger-bg);
+      color: var(--danger);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+    .btn-danger:hover {
+      background: var(--danger);
+      color: #ffffff;
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-wrapper">
+    <div class="admin-header">
+      <div class="admin-title-area">
+        <h1>Contact Inquiries Admin Dashboard</h1>
+        <p>Private message center for Kishore Gowda V (<a href="/" style="color: var(--accent-primary); text-decoration: underline;">Return to Portfolio</a>)</p>
+      </div>
+      <div>
+        <button id="logout-btn" class="btn btn-secondary btn-sm" style="display: none;">Log Out</button>
+      </div>
+    </div>
+
+    <!-- Login Area -->
+    <div id="login-container" class="auth-box">
+      <div style="font-size: 2.5rem; margin-bottom: 1rem;">🔐</div>
+      <h2 style="font-size: 1.4rem; margin-bottom: 0.5rem;">Admin Access</h2>
+      <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
+        Enter your admin passkey to review visitor messages.
+      </p>
+      <form id="login-form">
+        <div class="form-group" style="text-align: left;">
+          <label class="form-label">Passkey</label>
+          <input type="password" id="admin-key-input" class="form-input" placeholder="Enter key (default: kishore2026)" required autocomplete="current-password">
+        </div>
+        <div id="login-error" style="color: var(--danger); font-size: 0.85rem; margin-bottom: 1rem; display: none;"></div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Access Inbox</button>
+      </form>
+    </div>
+
+    <!-- Messages Container -->
+    <div id="dashboard-container" style="display: none;">
+      <div class="admin-stats-bar">
+        <div class="admin-stat-card">
+          <div id="stat-total" class="admin-stat-val">0</div>
+          <div class="admin-stat-lbl">Total Inquiries</div>
+        </div>
+        <div class="admin-stat-card">
+          <div id="stat-unread" class="admin-stat-val" style="color: #ea580c;">0</div>
+          <div class="admin-stat-lbl">Unread Messages</div>
+        </div>
+        <div class="admin-stat-card">
+          <div class="admin-stat-val" style="font-size: 1.25rem; color: var(--success); display: flex; align-items: center; gap: 0.4rem; height: 100%;">
+            <span class="status-dot" style="background-color: var(--success);"></span> Online & Active
+          </div>
+          <div class="admin-stat-lbl">Backend Status</div>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+        <h2 style="font-size: 1.3rem;">All Received Messages</h2>
+        <div style="display: flex; gap: 0.5rem;">
+          <input type="text" id="search-input" class="form-input" placeholder="Search by name, email or keyword..." style="width: 280px; padding: 0.5rem 0.85rem; font-size: 0.875rem;">
+          <button id="refresh-btn" class="btn btn-secondary btn-sm">Refresh</button>
+        </div>
+      </div>
+
+      <div id="messages-list" class="messages-list">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/admin.js"></script>
+</body>
+</html>
